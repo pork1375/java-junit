@@ -1,13 +1,40 @@
 package com.example.springjunit;
 
+import jdk.jfr.Enabled;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.*;
 
 import java.time.Duration;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)   // _ 를 공백으로 치환한다.
 class StudyTest {
+
+    @Test
+    @EnabledOnOs({OS.WINDOWS, OS.LINUX})    // 특정 OS에서 실행이 가능하다.
+    @EnabledOnJre({JRE.JAVA_8, JRE.JAVA_9, JRE.JAVA_11})    // 해당 선택한 버전을 테스트 하겠다.
+    @EnabledIfEnvironmentVariable(named = "TEST_ENV", matches = "local")    // 어떤 환경에서 사용할지 에노테이션으로 가능
+    void create2() {
+        String test_env = System.getenv("TEST_ENV");
+        System.out.println(test_env);
+        assumeTrue("local".equalsIgnoreCase(test_env));
+
+        // 개발 환경에 따라 어떤걸 실행할건지 할 수 있다.
+        assumingThat("local".equalsIgnoreCase(test_env), () -> {
+            Study study = new Study(100);
+            assertThat(study.getLimit()).isGreaterThan(0);
+        });
+
+        assumingThat("dev".equalsIgnoreCase(test_env), () -> {
+            Study study = new Study(10);
+            assertThat(study.getLimit()).isGreaterThan(0);
+        });
+
+    }
 
     @Test
     @DisplayName("이름을 만든다.")
