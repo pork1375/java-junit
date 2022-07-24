@@ -21,4 +21,5 @@ public class Study {
     public int getLimit() {
         return limit;
     }
+
 }

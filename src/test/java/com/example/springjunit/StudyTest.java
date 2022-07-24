@@ -16,6 +16,7 @@ class StudyTest {
 
     @Test
     @EnabledOnOs({OS.WINDOWS, OS.LINUX})    // 특정 OS에서 실행이 가능하다.
+    // @EnabledOnJre() 사용한다, @DisabledOnOs() 사용 안한다.
     @EnabledOnJre({JRE.JAVA_8, JRE.JAVA_9, JRE.JAVA_11})    // 해당 선택한 버전을 테스트 하겠다.
     @EnabledIfEnvironmentVariable(named = "TEST_ENV", matches = "local")    // 어떤 환경에서 사용할지 에노테이션으로 가능
     void create2() {
